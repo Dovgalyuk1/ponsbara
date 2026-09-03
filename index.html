@@ -1,0 +1,760 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PONSBARA — the triangle of trust</title>
+<meta name="description" content="ponsbara. i have drawn a triangle. it is a good triangle. you are already inside it. the water is 39°c.">
+<link rel="icon" href="assets/favicon.png">
+<meta property="og:title" content="PONSBARA — the triangle of trust">
+<meta property="og:description" content="the calmest pyramid in history. week 14 — still fine.">
+<meta property="og:image" content="assets/ava.webp">
+
+<script>
+/* SETTINGS - everything is changed here, at the top, in ONE place */
+window.CONTRACT = "";  /* contract address. empty = "soon" */
+window.TWITTER  = "";  /* link to X. empty = plain x.com link */
+document.addEventListener('DOMContentLoaded', function(){
+  var CA=(window.CONTRACT||"").trim(), TW=(window.TWITTER||"").trim();
+  document.querySelectorAll('a[href]').forEach(function(a){
+    var h=a.getAttribute('href')||"";
+    if(h.indexOf('pump.fun')>-1){ if(CA) a.href='https://pump.fun/coin/'+CA; }
+    else if(h.indexOf('dexscreener')>-1){ if(CA) a.href='https://dexscreener.com/solana/'+CA; }
+    else if(h.indexOf('x.com')>-1||h.indexOf('twitter.com')>-1){ if(TW) a.href=TW; }
+  });
+  if(CA){
+    document.querySelectorAll('.ca b, .ca-val').forEach(function(b){ b.textContent=CA; });
+    document.querySelectorAll('.ca, .ca-row').forEach(function(el){
+      el.title=CA; el.style.cursor='pointer';
+      el.addEventListener('click', function(){ if(navigator.clipboard) navigator.clipboard.writeText(CA); });
+    });
+  }
+});
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:#f2ecdd;
+  --paper2:#e6ddc8;
+  --ink:#141c19;
+  --marker:#1c6b52;
+  --marker-l:#39a37c;
+  --red:#bf3b2e;
+  --citrus:#f79a1f;
+  --water:#2c6c78;
+  --water-d:#17434c;
+  --glass:#b9e2c8;
+  --steam:rgba(255,255,255,.72);
+  --disp:"Archivo Black",system-ui,sans-serif;
+  --hand:"Caveat","Comic Sans MS",cursive;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--water-d); color:var(--ink);
+  font-family:var(--mono); overflow-x:clip;
+}
+body.locked{overflow:hidden; height:100svh}
+img{max-width:100%; display:block}
+button{font:inherit; color:inherit; cursor:pointer}
+a{color:inherit}
+
+/* ============ fixed onsen scene ============ */
+#scene{position:fixed; inset:0; z-index:0; overflow:hidden;
+  background:
+    radial-gradient(ellipse at 50% 108%, #3f8b93 0%, #235c66 45%, #12333a 100%);
+}
+#scene .rock{position:absolute; border-radius:50% 50% 44% 56%/60% 40% 60% 40%;
+  background:linear-gradient(180deg,#2c3a38,#161f1e); opacity:.85}
+#scene .r1{width:52vw;height:22vw;left:-12vw;bottom:-4vw}
+#scene .r2{width:44vw;height:18vw;right:-10vw;bottom:-2vw}
+#scene .r3{width:30vw;height:12vw;left:34vw;bottom:-6vw;opacity:.6}
+#scene .surf{position:absolute;left:-10%;right:-10%;bottom:0;height:46%;
+  background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.07) 34%,rgba(255,255,255,.17));
+  filter:blur(10px)}
+.steam{position:absolute;border-radius:50%;background:var(--steam);filter:blur(46px);opacity:.34;
+  animation:rise linear infinite}
+@keyframes rise{
+  0%{transform:translate3d(0,18vh,0) scale(.7);opacity:0}
+  22%{opacity:.4}
+  100%{transform:translate3d(4vw,-72vh,0) scale(1.7);opacity:0}
+}
+.s1{width:26vw;height:26vw;left:6%;bottom:-14vh;animation-duration:17s}
+.s2{width:34vw;height:34vw;left:38%;bottom:-18vh;animation-duration:23s;animation-delay:-6s}
+.s3{width:22vw;height:22vw;left:72%;bottom:-12vh;animation-duration:19s;animation-delay:-11s}
+.s4{width:30vw;height:30vw;left:20%;bottom:-20vh;animation-duration:26s;animation-delay:-16s}
+
+/* ============ film ============ */
+.film{position:fixed;inset:0;z-index:90;pointer-events:none}
+.scanlines{background:repeating-linear-gradient(rgba(0,0,0,.16) 0 1px,transparent 1px 3px);mix-blend-mode:multiply;opacity:.55}
+.grain{background-image:radial-gradient(rgba(255,255,255,.5) .5px,transparent .6px);background-size:3px 3px;mix-blend-mode:overlay;opacity:.15}
+.vignette{background:radial-gradient(ellipse at 50% 45%, #0000 50%, rgba(4,16,18,.55) 100%)}
+.lam{background:linear-gradient(112deg,rgba(255,255,255,0) 34%,rgba(255,255,255,.14) 46%,rgba(255,255,255,0) 58%);opacity:.9}
+.roll{position:absolute;left:0;right:0;height:30%;background:linear-gradient(180deg,transparent,rgba(255,255,255,.07),transparent);animation:roll 9s linear infinite}
+@keyframes roll{from{top:-40%}to{top:110%}}
+
+/* ============ gate ============ */
+#gate{position:fixed;inset:0;z-index:200;display:grid;place-items:center;
+  background:radial-gradient(ellipse at 50% 50%,#1d4d55,#08191d 78%);
+  cursor:pointer;text-align:center;padding:6vw}
+#gate .wrap{max-width:640px}
+#gate .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.32em;color:#8fc7c0;margin-bottom:22px}
+#gate h1{font-family:var(--disp);font-size:clamp(30px,7vw,62px);line-height:.96;margin:0 0 14px;color:#f4efe2;
+  -webkit-text-stroke:6px #0b2126;paint-order:stroke fill;
+  filter:drop-shadow(0 6px 0 #10555c) drop-shadow(0 12px 0 #0a3238)}
+#gate p{font-family:var(--hand);font-size:clamp(19px,3.4vw,27px);color:#cfeee4;margin:0 0 30px;line-height:1.25}
+#gate .knock{display:inline-block;border:2px solid #f4efe2;color:#f4efe2;padding:13px 26px;
+  font-size:12px;letter-spacing:.24em;box-shadow:4px 4px 0 rgba(0,0,0,.5);animation:blink 2.2s steps(1) infinite}
+@keyframes blink{50%{opacity:.3}}
+#gate.off{opacity:0;pointer-events:none;transition:opacity .5s ease}
+
+/* ============ cutscene (projector slides) ============ */
+#cut{position:fixed;inset:0;z-index:180;display:none;place-items:center;background:#08191d;padding:5vw}
+#cut.on{display:grid}
+#cut .proj{width:min(880px,94vw);aspect-ratio:4/3;background:var(--paper);position:relative;overflow:hidden;
+  box-shadow:0 0 0 10px #0e2b30, 0 30px 90px rgba(0,0,0,.7)}
+#cut .sl{position:absolute;inset:0;display:grid;place-content:center;gap:16px;padding:8% 9%;opacity:0;transition:opacity .45s}
+#cut .sl.on{opacity:1}
+#cut .sl .kick{font-size:10px;letter-spacing:.3em;color:#7d8a83}
+#cut .sl h2{font-family:var(--disp);font-size:clamp(20px,3.6vw,38px);margin:0;line-height:1.02}
+#cut .sl p{font-family:var(--hand);font-size:clamp(19px,3vw,30px);margin:0;color:var(--marker);line-height:1.2}
+#cut .bar{position:absolute;left:0;bottom:0;height:5px;background:var(--marker);width:0%}
+#cut .skip{position:absolute;right:14px;bottom:14px;background:none;border:1px solid rgba(244,239,226,.5);
+  color:#f4efe2;font-size:10px;letter-spacing:.22em;padding:9px 14px}
+#cut .skip:hover{background:rgba(244,239,226,.14)}
+
+/* ============ layout ============ */
+main{position:relative;z-index:10}
+.pad{width:min(1080px,92vw);margin:0 auto}
+section{padding:clamp(56px,9vw,120px) 0}
+
+/* laminated card */
+.card{background:var(--paper);border:2px solid var(--ink);box-shadow:8px 8px 0 rgba(6,20,22,.55);
+  padding:clamp(18px,3vw,34px);position:relative}
+.card:before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,0) 40%,rgba(255,255,255,.35) 50%,rgba(255,255,255,0) 60%)}
+.kick{font-size:10px;letter-spacing:.3em;color:#6c7a73;margin:0 0 10px}
+h2{font-family:var(--disp);font-size:clamp(20px,3.4vw,34px);line-height:1.04;margin:0 0 6px;letter-spacing:-.01em}
+h3{font-family:var(--disp);font-size:clamp(15px,2vw,19px);margin:0 0 8px}
+.hand{font-family:var(--hand);color:var(--marker);font-size:clamp(19px,2.7vw,26px);line-height:1.24}
+.body{font-size:13.5px;line-height:1.72;color:#2a3733}
+.strike{text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:3px}
+.tag{display:inline-block;font-size:9.5px;letter-spacing:.22em;border:1.5px solid var(--ink);padding:5px 9px}
+
+/* ============ hero ============ */
+#hero{padding-top:clamp(70px,12vh,150px)}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(20px,4vw,46px);align-items:center}
+.word{font-family:var(--disp);font-size:clamp(44px,11vw,124px);line-height:.84;margin:0;color:#f6f1e4;
+  -webkit-text-stroke:9px #0b2126;paint-order:stroke fill;letter-spacing:-.03em;
+  filter:drop-shadow(0 8px 0 #14595f) drop-shadow(0 16px 0 #0a3138) drop-shadow(0 30px 28px rgba(0,0,0,.55))}
+.sub{font-family:var(--disp);font-size:clamp(11px,1.8vw,16px);letter-spacing:.2em;color:var(--citrus);margin:16px 0 0}
+.slog{font-family:var(--hand);font-size:clamp(22px,3.6vw,34px);color:#dff3e6;margin:16px 0 0;line-height:1.18;
+  text-shadow:0 2px 0 rgba(0,0,0,.4)}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--paper);border:2px solid var(--ink);
+  padding:12px 18px;font-size:11px;letter-spacing:.16em;text-decoration:none;box-shadow:0 5px 0 var(--ink)}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.btn.pri{background:var(--citrus)}
+.btn.dark{background:var(--marker);color:#f2ecdd;border-color:#08201c;box-shadow:0 5px 0 #08201c}
+.mascot{position:relative}
+.mascot img{width:100%;filter:drop-shadow(0 22px 34px rgba(0,0,0,.5));animation:bob 5.4s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(-14px) rotate(1.4deg)}}
+.citrus{position:absolute;width:20%;aspect-ratio:1;border-radius:50%;left:38%;top:-2%;
+  background:radial-gradient(circle at 34% 30%,#ffc46b,var(--citrus) 60%,#c9711a);
+  box-shadow:0 6px 0 #a35a12, inset -4px -6px 0 rgba(0,0,0,.12);animation:bob 5.4s ease-in-out infinite alternate}
+.pin{position:absolute;right:-2%;bottom:8%;background:var(--paper);border:2px solid var(--ink);
+  padding:8px 11px;font-size:9.5px;letter-spacing:.18em;transform:rotate(-4deg);box-shadow:4px 4px 0 rgba(0,0,0,.45)}
+
+/* CA */
+.ca-row{margin-top:24px;display:inline-flex;align-items:center;gap:12px;background:var(--paper);
+  border:2px dashed var(--ink);padding:11px 15px;max-width:100%}
+.ca-row .lb{font-size:9.5px;letter-spacing:.22em;color:#6c7a73;white-space:nowrap}
+.ca-row b{font-size:11.5px;word-break:break-all;font-weight:600}
+.ca-side{position:fixed;right:0;top:50%;transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;
+  z-index:80;background:var(--citrus);border:2px solid var(--ink);border-right:0;padding:14px 8px;
+  font-size:10px;letter-spacing:.2em;cursor:pointer}
+.ca-bot{display:none}
+
+/* ============ triangle ============ */
+#triangle .wrapg{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,3vw,36px);align-items:center}
+.board{background:var(--paper);border:2px solid var(--ink);box-shadow:8px 8px 0 rgba(6,20,22,.55);padding:14px}
+.board svg{display:block;width:100%;height:auto}
+.tri-path{fill:none;stroke:var(--marker);stroke-width:5;stroke-linejoin:round;stroke-linecap:round}
+.tri-in{fill:none;stroke:var(--red);stroke-width:3;stroke-dasharray:7 6}
+.lbl{font-family:var(--hand);font-size:17px;fill:var(--ink)}
+.lbl.sm{font-size:14px;fill:#5d6b64}
+
+/* ============ compensation ============ */
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+.lev{background:var(--paper);border:2px solid var(--ink);padding:20px 18px;box-shadow:0 6px 0 rgba(6,20,22,.55);
+  position:relative;overflow:hidden}
+.lev .n{font-family:var(--disp);font-size:34px;color:var(--marker-l);line-height:1}
+.lev .t{font-family:var(--disp);font-size:14px;margin:8px 0 6px}
+.lev .d{font-size:12px;line-height:1.6;color:#41504a}
+.lev:nth-child(2) .n{color:var(--citrus)}
+.lev:nth-child(3) .n{color:var(--red)}
+.lev .stripe{position:absolute;left:0;top:0;right:0;height:6px;background:var(--marker)}
+.lev:nth-child(2) .stripe{background:var(--citrus)}
+.lev:nth-child(3) .stripe{background:var(--red)}
+
+/* ============ downline / gimmick ============ */
+.pool{position:relative;height:clamp(280px,42vw,420px);border:2px solid var(--ink);overflow:hidden;
+  background:linear-gradient(180deg,#7fb8b6 0%,#3d8189 34%,#1d4e57 100%);box-shadow:8px 8px 0 rgba(6,20,22,.55)}
+.pool .waterline{position:absolute;left:0;right:0;bottom:0;height:var(--wl,62%);z-index:4;pointer-events:none;
+  background:linear-gradient(180deg,rgba(180,232,228,.34),rgba(34,104,114,.5) 22%,rgba(10,50,56,.72));
+  border-top:3px solid rgba(255,255,255,.75);transition:height .45s ease}
+.stack{position:absolute;inset:0;z-index:2}
+.cap{position:absolute;width:clamp(30px,5.2vw,56px);opacity:0;
+  transition:opacity .34s ease, translate .34s ease; translate:0 16px;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,.45))}
+.cap.on{opacity:1;translate:0 0}
+.cap.flip{scale:-1 1}
+.founder{position:absolute;left:4%;bottom:74%;width:clamp(38px,6vw,66px);z-index:3;
+  filter:drop-shadow(0 5px 8px rgba(0,0,0,.5))}
+.founder .cz{position:absolute;left:34%;top:-16%;width:34%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 34% 30%,#ffc46b,var(--citrus) 60%,#c9711a);box-shadow:0 3px 0 #a35a12}
+.founder .fl{position:absolute;left:105%;top:26%;white-space:nowrap;font-family:var(--hand);font-size:17px;color:#eaf7f2}
+.pool .rd{position:absolute;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:#eaf7f2;
+  right:12px;top:12px;background:rgba(6,24,28,.55);padding:6px 9px;border:1px solid rgba(255,255,255,.3);z-index:6}
+.recruit{margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.rbtn{background:var(--citrus);border:2px solid var(--ink);padding:13px 22px;font-size:12px;letter-spacing:.18em;
+  box-shadow:0 6px 0 var(--ink)}
+.rbtn:active{transform:translateY(5px);box-shadow:0 1px 0 var(--ink)}
+.rout{font-family:var(--hand);font-size:clamp(18px,2.6vw,24px);color:#dff3e6}
+
+/* ============ projector screen ============ */
+.tv{position:relative;background:#0d2226;border:2px solid var(--ink);padding:12px;
+  box-shadow:8px 8px 0 rgba(6,20,22,.55)}
+.tv .glass{position:relative;aspect-ratio:4/3;background:var(--paper);overflow:hidden}
+.tv .ch{position:absolute;inset:0;opacity:0;transition:opacity .3s;display:grid;place-content:center;gap:14px;padding:8%;text-align:center}
+.tv .ch.on{opacity:1}
+.tv .ch h4{font-family:var(--disp);font-size:clamp(16px,2.6vw,26px);margin:0}
+.tv .ch p{font-family:var(--hand);font-size:clamp(18px,2.8vw,26px);color:var(--marker);margin:0;line-height:1.2}
+.tv .lines{position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(rgba(0,0,0,.14) 0 1px,transparent 1px 4px)}
+.tv .hud{display:flex;justify-content:space-between;align-items:center;margin-top:10px;color:#a9d2c9;font-size:10px;letter-spacing:.2em}
+.chbtn{background:#f2ecdd;border:2px solid #08201c;padding:9px 14px;font-size:10px;letter-spacing:.2em;box-shadow:0 4px 0 #08201c}
+.chbtn:active{transform:translateY(3px);box-shadow:0 1px 0 #08201c}
+
+/* ============ testimonials ============ */
+.quotes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+.q{background:var(--paper);border:2px solid var(--ink);padding:18px;box-shadow:5px 5px 0 rgba(6,20,22,.5)}
+.q p{font-family:var(--hand);font-size:20px;color:var(--marker);margin:0 0 10px;line-height:1.22}
+.q .who{font-size:10px;letter-spacing:.18em;color:#6c7a73}
+.q:nth-child(2){transform:rotate(.5deg)}
+.q:nth-child(3){transform:rotate(-.6deg)}
+
+/* ============ folder / gallery ============ */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px;
+  perspective:1200px;perspective-origin:50% 40%}
+.grid button{background:var(--paper);border:2px solid var(--ink);padding:8px;box-shadow:6px 6px 0 rgba(6,20,22,.5);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.grid button svg,.grid button img{width:100%;height:auto;display:block}
+.grid button .cap-t{font-size:9.5px;letter-spacing:.16em;color:#6c7a73;margin-top:8px;text-align:left}
+.grid button:nth-child(3n+1){transform:rotateY(20deg) rotateX(-5deg) translateZ(-22px)}
+.grid button:nth-child(3n+2){transform:rotateY(-4deg) rotateX(7deg) translateZ(10px)}
+.grid button:nth-child(3n+3){transform:rotateY(-21deg) rotateX(-3deg) translateZ(-14px)}
+.grid button:hover{transform:rotateY(0) rotateX(0) translateZ(50px)}
+
+#lb{position:fixed;inset:0;z-index:210;display:none;place-items:center;background:rgba(4,16,18,.9);padding:5vw}
+#lb.on{display:grid}
+#lb .in{width:min(760px,92vw);background:var(--paper);border:2px solid var(--ink);padding:16px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+#lb .in svg,#lb .in img{width:100%;height:auto}
+#lb .cp{font-size:11px;letter-spacing:.14em;color:#5d6b64;margin-top:12px}
+#lb .nav{display:flex;gap:10px;justify-content:space-between;margin-top:12px}
+#lb .nav button{background:var(--marker);color:#f2ecdd;border:2px solid #08201c;padding:9px 16px;font-size:11px;letter-spacing:.2em}
+
+/* ============ sneak peek ============ */
+.peek{display:flex;gap:12px;overflow-x:auto;padding:14px 0 6px;scrollbar-width:none}
+.peek::-webkit-scrollbar{display:none}
+.peek>div{flex:0 0 clamp(130px,20vw,190px);background:var(--paper);border:2px solid var(--ink);padding:6px;
+  box-shadow:4px 4px 0 rgba(6,20,22,.5)}
+.peek>div svg{width:100%;height:auto}
+
+/* ============ marquee ============ */
+.mq{background:var(--marker);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);overflow:hidden;
+  padding:13px 0;position:relative;z-index:10}
+.mq div{display:inline-block;white-space:nowrap;font-family:var(--disp);font-size:15px;letter-spacing:.1em;
+  color:#f2ecdd;animation:mq 26s linear infinite}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ============ rules ============ */
+.rules{display:grid;gap:10px;margin-top:20px}
+.rule{background:var(--paper);border:2px solid var(--ink);padding:14px 16px;display:flex;gap:14px;align-items:baseline;
+  box-shadow:0 4px 0 rgba(6,20,22,.5)}
+.rule b{font-family:var(--disp);font-size:12px;letter-spacing:.14em;color:var(--red);white-space:nowrap}
+.rule span{font-family:var(--hand);font-size:20px;color:var(--marker);line-height:1.2}
+
+/* ============ footer ============ */
+footer{background:#0a1e22;border-top:2px solid var(--ink);padding:44px 0;position:relative;z-index:10;color:#8fb6ae}
+footer .pad{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
+footer .lg{font-family:var(--disp);font-size:20px;color:#f2ecdd}
+footer .st{font-size:10px;letter-spacing:.2em}
+footer a{font-size:11px;letter-spacing:.16em;text-decoration:none;border-bottom:1px solid rgba(143,182,174,.5)}
+
+/* ============ mobile ============ */
+#sndBtn{position:fixed;left:12px;bottom:12px;z-index:85;background:#f2ecdd;border:2px solid #141c19;
+  padding:9px 12px;font:600 10px/1 var(--mono);letter-spacing:.2em;box-shadow:0 4px 0 #141c19}
+
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .mascot{max-width:74%;margin:8px auto 0}
+  .word{-webkit-text-stroke:6px #0b2126;filter:drop-shadow(0 5px 0 #14595f) drop-shadow(0 10px 0 #0a3138)}
+  .sub{margin-top:20px}
+  #sndBtn{bottom:58px}
+  #triangle .wrapg{grid-template-columns:1fr}
+  .levels{grid-template-columns:1fr}
+  .quotes{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr 1fr}
+  .grid button{transform:none!important}
+  .ca-side{display:none}
+  .ca-bot{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:80;background:var(--citrus);
+    border-top:2px solid var(--ink);padding:10px 12px;align-items:center;gap:10px;font-size:10px;
+    letter-spacing:.16em;cursor:pointer}
+  .ca-bot b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  footer{padding-bottom:70px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<!-- ===================== fixed scene ===================== -->
+<div id="scene" aria-hidden="true">
+  <div class="steam s1"></div><div class="steam s2"></div><div class="steam s3"></div><div class="steam s4"></div>
+  <div class="rock r3"></div><div class="rock r1"></div><div class="rock r2"></div>
+  <div class="surf"></div>
+</div>
+
+<!-- ===================== gate ===================== -->
+<div id="gate" role="button" tabindex="0">
+  <div class="wrap">
+    <div class="stamp">PONSBARA CAPITAL · ROOM 3 · WEEK 14</div>
+    <h1>THE MEETING<br>HAS ALREADY<br>STARTED</h1>
+    <p>the water is 39°c. bring a towel.<br>the towel is not part of the plan.</p>
+    <span class="knock">CLICK TO ENTER</span>
+  </div>
+</div>
+
+<!-- ===================== cutscene ===================== -->
+<div id="cut">
+  <div class="proj">
+    <div class="sl" data-i="0">
+      <div class="kick">SLIDE 01 OF 03</div>
+      <h2>THIS IS NOT A PYRAMID.</h2>
+      <p>a pyramid has stairs.<br>stairs are effort.</p>
+    </div>
+    <div class="sl" data-i="1">
+      <div class="kick">SLIDE 02 OF 03</div>
+      <h2>THIS IS A TRIANGLE.</h2>
+      <p>a triangle just sits there.<br>like me. in the water.</p>
+    </div>
+    <div class="sl" data-i="2">
+      <div class="kick">SLIDE 03 OF 03</div>
+      <h2>YOU ARE ALREADY INSIDE IT.</h2>
+      <p>congratulations.<br>please do not stand up.</p>
+    </div>
+    <div class="bar"></div>
+    <button class="skip">SKIP SEMINAR</button>
+  </div>
+</div>
+
+<main>
+
+<!-- ===================== hero ===================== -->
+<section id="hero"><div class="pad">
+  <div class="hero-grid">
+    <div>
+      <h1 class="word">PONS<br>BARA</h1>
+      <div class="sub">THE CALMEST PYRAMID IN HISTORY</div>
+      <p class="slog">i have drawn a triangle.<br>it is a good triangle.<br>you are already inside it.</p>
+      <div class="btns">
+        <a class="btn pri" href="https://pump.fun">BUY $PONSBARA</a>
+        <a class="btn dark" href="https://x.com">FOLLOW ON X</a>
+        <a class="btn" href="https://dexscreener.com">CHART</a>
+      </div>
+      <div class="ca-row ca"><span class="lb">CONTRACT</span><b class="ca-val">soon · the triangle is patient</b></div>
+    </div>
+    <div class="mascot">
+      <div class="citrus"></div>
+      <img src="assets/cut-ponsbara.webp" alt="ponsbara, translucent and unbothered, holding the entire compensation plan in her head">
+      <div class="pin">FOUNDER · CHIEF WATER OFFICER</div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ===================== marquee ===================== -->
+<div class="mq"><div id="mq1"></div></div>
+
+<!-- ===================== triangle ===================== -->
+<section id="triangle"><div class="pad">
+  <div class="wrapg">
+    <div class="board">
+      <svg viewBox="0 0 520 420" role="img" aria-label="whiteboard diagram of a triangle with one capybara at the top and everyone else underwater">
+        <rect x="0" y="0" width="520" height="420" fill="none"/>
+        <polygon id="triP" class="tri-path" points="260,42 486,368 34,368"/>
+        <line class="tri-in" x1="120" y1="245" x2="400" y2="245"/>
+        <line class="tri-in" x1="70" y1="316" x2="450" y2="316"/>
+        <circle cx="260" cy="86" r="13" fill="#f79a1f" stroke="#141c19" stroke-width="3"/>
+        <text class="lbl" x="298" y="92">me</text>
+        <text class="lbl sm" x="298" y="112">(the water)</text>
+        <text class="lbl" x="150" y="236">you, briefly</text>
+        <text class="lbl" x="104" y="307">you, thoroughly</text>
+        <text class="lbl sm" x="150" y="396">this line is the surface</text>
+        <line x1="24" y1="382" x2="496" y2="382" stroke="#2c6c78" stroke-width="4" stroke-dasharray="12 7"/>
+      </svg>
+    </div>
+    <div>
+      <p class="kick">FIG. 1 — DRAWN ONCE, NEVER REVISED</p>
+      <h2 style="color:#f6f1e4;-webkit-text-stroke:5px #0b2126;paint-order:stroke fill">THE TRIANGLE<br>OF TRUST</h2>
+      <p class="hand" style="color:#dff3e6">not a <span class="strike">ponzi</span>. that word is rude.</p>
+      <div class="card" style="margin-top:18px">
+        <p class="body">i do not chase anyone. people arrive at the water on their own and ask what the triangle is. i say: it is a triangle. they say: is it safe. i say: it is a shape.</p>
+        <p class="body">i have drawn it exactly once, on the back of a laminated menu, in week 1. i have not revised it. revision implies doubt and doubt raises the temperature of the water.</p>
+        <p class="body">at the top of the triangle there is one citrus. it is warm. it has been warm for fourteen weeks. below the top there are levels, and below the levels there is the surface of the water, and below the surface there is the rest of the plan.</p>
+        <p class="body">nobody has left. leaving would require standing up.</p>
+        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+          <span class="tag">WEEK 14</span><span class="tag">STILL FINE</span><span class="tag">39.0 °C</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ===================== compensation ===================== -->
+<section id="plan"><div class="pad">
+  <p class="kick" style="color:#a9d2c9">HANDOUT · DO NOT PHOTOCOPY · PHOTOCOPYING IS EFFORT</p>
+  <h2 style="color:#f6f1e4;-webkit-text-stroke:5px #0b2126;paint-order:stroke fill">THE COMPENSATION PLAN</h2>
+  <p class="hand" style="color:#dff3e6">recruit two friends. receive one warm citrus.<br>place it on your head. this is your dividend.</p>
+  <div class="levels">
+    <div class="lev"><div class="stripe"></div><div class="n">01</div><div class="t">YOU</div>
+      <div class="d">you sit down. the water accepts you. no paperwork, because paperwork gets wet.</div></div>
+    <div class="lev"><div class="stripe"></div><div class="n">02</div><div class="t">ALSO YOU</div>
+      <div class="d">your downline is you, slightly lower. this is the most reliable recruit available and requires no phone calls.</div></div>
+    <div class="lev"><div class="stripe"></div><div class="n">03</div><div class="t">A WARM LEMON</div>
+      <div class="d">payout occurs here. the lemon does not appreciate in value. the lemon appreciates you.</div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>SETTLEMENT SCHEDULE</h3>
+    <p class="body">payouts are made whenever the citrus rolls downhill. the citrus decides. i do not overrule the citrus — that would be a governance structure, and governance structures need chairs, and chairs do not go in water.</p>
+  </div>
+</div></section>
+
+<!-- ===================== downline / gimmick ===================== -->
+<section id="downline"><div class="pad">
+  <p class="kick" style="color:#a9d2c9">FIG. 2 — THE DOWNLINE, LIVE</p>
+  <h2 style="color:#f6f1e4;-webkit-text-stroke:5px #0b2126;paint-order:stroke fill">EVERY NEW MEMBER<br>LOWERS THE WATER</h2>
+  <div class="pool" id="pool" style="--wl:64%">
+    <div class="waterline"></div>
+    <div class="rd" id="rd">MEMBERS 000 · SURFACE 64%</div>
+    <div class="founder">
+      <div class="cz"></div>
+      <img src="assets/cut-ponsbara.webp" alt="ponsbara at the top of the downline, warm citrus balanced, water untouched">
+      <div class="fl">me</div>
+    </div>
+    <div class="stack" id="stack"></div>
+  </div>
+  <div class="recruit">
+    <button class="rbtn" id="rbtn">+1 RECRUIT</button>
+    <span class="rout" id="rout">the pool has room. the pool always has room.</span>
+  </div>
+</div></section>
+
+<!-- ===================== projector ===================== -->
+<section id="screen"><div class="pad">
+  <div class="wrapg" style="display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(18px,3vw,36px);align-items:center">
+    <div class="tv">
+      <div class="glass">
+        <div class="ch on" data-c="0">
+          <div class="kick">CH 01 · PAL · SEMINAR LOOP</div>
+          <h4>WEEK 14 · ROOM 3</h4>
+          <p>attendance: everyone.<br>agenda: the shape.<br>duration: ongoing.</p>
+        </div>
+        <div class="ch" data-c="1">
+          <div class="kick">CH 02 · PAL · POOLSIDE CAM</div>
+          <h4>NO EXIT OBSERVED</h4>
+          <p>steam: nominal.<br>morale: horizontal.<br>the citrus has not moved since tuesday.</p>
+        </div>
+        <div class="lines"></div>
+      </div>
+      <div class="hud"><span id="chlbl">CH 01 · PAL</span><button class="chbtn" id="chbtn">CH +</button></div>
+    </div>
+    <div>
+      <p class="kick" style="color:#a9d2c9">THE SEMINAR IS ALWAYS ON</p>
+      <h2 style="color:#f6f1e4;-webkit-text-stroke:5px #0b2126;paint-order:stroke fill">MEET YOUR UPLINE</h2>
+      <div class="card" style="margin-top:16px">
+        <p class="body">i have no upline. i checked. i looked up and there was only steam and a ceiling fan that has been off since the building opened.</p>
+        <p class="body">people ask who is above me. i tell them: the water. they ask who is above the water. i tell them: the ceiling. they accept this and sit back down, and the triangle holds.</p>
+      </div>
+      <div class="rules">
+        <div class="rule"><b>RULE 01</b><span>do not get out. the triangle needs your shape.</span></div>
+        <div class="rule"><b>RULE 02</b><span>the word is triangle.</span></div>
+        <div class="rule"><b>RULE 03</b><span>if the numbers stop working, sit lower.</span></div>
+        <div class="rule"><b>RULE 04</b><span>you are fine. you are completely fine.</span></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ===================== testimonials ===================== -->
+<section id="testimonials"><div class="pad">
+  <p class="kick" style="color:#a9d2c9">TESTIMONIALS FROM THE WATER · UNVERIFIED · UNBOTHERED</p>
+  <h2 style="color:#f6f1e4;-webkit-text-stroke:5px #0b2126;paint-order:stroke fill">WHAT THE MEMBERS SAY</h2>
+  <div class="quotes">
+    <div class="q"><p>“i joined at level two and have since sunk to level five. the view is different but the temperature is identical.”</p><div class="who">MEMBER 0041 · SUBMERGED · SATISFIED</div></div>
+    <div class="q"><p>“she explained the plan to me for forty minutes. she said one word. the word was fine.”</p><div class="who">MEMBER 0007 · TOWEL DEPARTMENT</div></div>
+    <div class="q"><p>“i asked for my citrus back. she handed me a different, warmer citrus. i consider the matter closed.”</p><div class="who">MEMBER 0112 · FORMER SKEPTIC</div></div>
+    <div class="q"><p>“my downline is my own reflection. it has never missed a payment.”</p><div class="who">MEMBER 0002 · TOP PERFORMER</div></div>
+  </div>
+</div></section>
+
+<!-- ===================== folder / gallery ===================== -->
+<section id="folder"><div class="pad">
+  <p class="kick" style="color:#a9d2c9">THE FOLDER · LAMINATED · SLIGHTLY DAMP</p>
+  <h2 style="color:#f6f1e4;-webkit-text-stroke:5px #0b2126;paint-order:stroke fill">OFFICIAL DOCUMENTS</h2>
+  <div class="grid" id="grid"></div>
+  <p class="kick" style="color:#a9d2c9;margin-top:34px">SNEAK PEEK · WEEK 15 MATERIALS</p>
+  <div class="peek" id="peek"></div>
+</div></section>
+
+<!-- ===================== marquee 2 ===================== -->
+<div class="mq"><div id="mq2"></div></div>
+
+<!-- ===================== outro ===================== -->
+<section id="outro"><div class="pad">
+  <div class="card" style="text-align:center">
+    <p class="kick">FINAL SLIDE</p>
+    <h2>THE WATER IS 39°C<br>AND THE TRIANGLE IS FINE</h2>
+    <p class="hand" style="margin-top:10px">i will be here next week. i will be here in the same spot.<br>bring two friends and one towel you are willing to lose.</p>
+    <div class="btns" style="justify-content:center">
+      <a class="btn pri" href="https://pump.fun">BUY $PONSBARA</a>
+      <a class="btn dark" href="https://x.com">X</a>
+      <a class="btn" href="https://dexscreener.com">DEX</a>
+    </div>
+  </div>
+</div></section>
+
+</main>
+
+<footer><div class="pad">
+  <div>
+    <div class="lg">PONSBARA</div>
+    <div class="st" style="margin-top:6px">ROOM 3 · WEEK 14 · STILL FINE</div>
+  </div>
+  <div class="st">SURFACE TENSION: HOLDING</div>
+  <div style="display:flex;gap:16px">
+    <a href="https://pump.fun">PUMP</a><a href="https://x.com">X</a><a href="https://dexscreener.com">DEX</a>
+  </div>
+</div></footer>
+
+<!-- CA rails -->
+<div class="ca ca-side"><span>CA</span> <b class="ca-val">SOON</b></div>
+<div class="ca ca-bot"><span>CA</span> <b class="ca-val">soon · the triangle is patient</b></div>
+
+<!-- lightbox -->
+<div id="lb"><div class="in">
+  <div id="lbBody"></div>
+  <div class="cp" id="lbCap"></div>
+  <div class="nav"><button id="lbPrev">‹ PREV</button><button id="lbClose">CLOSE (ESC)</button><button id="lbNext">NEXT ›</button></div>
+</div></div>
+
+<!-- film -->
+<div class="film scanlines"></div>
+<div class="film grain"></div>
+<div class="film lam"></div>
+<div class="film vignette"><div class="roll"></div></div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+/* ---------- gate + cutscene ---------- */
+var gate=$('#gate'), cut=$('#cut'), slides=$$('#cut .sl'), bar=$('#cut .bar');
+document.body.classList.add('locked');
+var cutTimer=null, cutStep=0, done=false;
+
+function finish(){
+  if(done) return; done=true;
+  if(cutTimer) clearInterval(cutTimer);
+  cut.classList.remove('on');
+  document.body.classList.remove('locked');
+}
+function runCut(){
+  cut.classList.add('on');
+  slides[0].classList.add('on');
+  var t=0, TOTAL=8400, TICK=60;
+  cutTimer=setInterval(function(){
+    t+=TICK;
+    bar.style.width=Math.min(100,t/TOTAL*100)+'%';
+    var want=Math.min(2,Math.floor(t/(TOTAL/3)));
+    if(want!==cutStep){ slides[cutStep].classList.remove('on'); cutStep=want; slides[cutStep].classList.add('on'); }
+    if(t>=TOTAL) finish();
+  },TICK);
+  setTimeout(finish, TOTAL+3000); /* safety */
+}
+function enter(){ gate.classList.add('off'); runCut(); }
+gate.addEventListener('click',enter);
+gate.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' ') enter(); });
+$('#cut .skip').addEventListener('click',function(e){ e.stopPropagation(); finish(); });
+
+/* ---------- marquee ---------- */
+var PHRASES=['THE TRIANGLE OF TRUST','WEEK 14 — STILL FINE','RECRUIT TWO FRIENDS · RECEIVE ONE WARM CITRUS',
+  'I AM THE WATER','DO NOT STAND UP','39.0 °C','A TRIANGLE JUST SITS THERE','NO EXIT OBSERVED'];
+function fill(el,arr){
+  var s=arr.map(function(p){return p}).join('   ·   ')+'   ·   ';
+  el.textContent=s+s;
+}
+fill($('#mq1'),PHRASES);
+fill($('#mq2'),['SIT LOWER','THE CITRUS DECIDES','MY DOWNLINE IS MY REFLECTION','YOU ARE COMPLETELY FINE','ROOM 3 · ONGOING']);
+
+/* ---------- triangle draw on scroll ---------- */
+var triP=$('#triP');
+try{
+  var len=triP.getTotalLength();
+  triP.style.strokeDasharray=len; triP.style.strokeDashoffset=len;
+}catch(e){}
+var sec=$('#triangle'), pending=false;
+function onScroll(){
+  if(pending) return; pending=true;
+  requestAnimationFrame(function(){
+    pending=false;
+    var r=sec.getBoundingClientRect();
+    var total=r.height+innerHeight*0.4;
+    var p=Math.min(1,Math.max(0,(innerHeight-r.top)/total));
+    try{
+      var L=triP.getTotalLength();
+      triP.style.strokeDashoffset=L*(1-Math.min(1,p*1.6));
+    }catch(e){}
+  });
+}
+addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+/* ---------- gimmick: +1 RECRUIT ---------- */
+var stack=$('#stack'), pool=$('#pool'), rd=$('#rd'), rout=$('#rout'), rbtn=$('#rbtn');
+var MAXCAP=13, n=0, wl=64;
+for(var i=0;i<MAXCAP;i++){
+  var im=document.createElement('img');
+  im.className='cap'+(i%2?' flip':''); im.src='assets/cut-ponsbara.webp';
+  im.alt='member '+(i+1)+' of the downline, seated, one level lower than the last';
+  im.style.left=(12+i*6.2)+'%';
+  im.style.bottom=(64-i*4.6)+'%';
+  stack.appendChild(im);
+}
+var caps=$$('.cap',stack);
+var LINES=['the pool has room. the pool always has room.','two more and the citrus rolls.','structurally identical to before.',
+ 'level three is now level four. same water.','i have not revised the drawing.','the bottom row reports normal conditions.',
+ 'attendance is up. surface is down.','someone asked a question. it was answered with steam.','the towels are gone. the plan is not.',
+ 'we are now measuring depth instead of growth.','the drawing still fits on the menu.','nobody has stood up.'];
+rbtn.addEventListener('click',function(){
+  if(n>=MAXCAP){ rout.textContent='sustainable.'; return; }
+  caps[n].classList.add('on'); n++;
+  wl=Math.max(9,wl-4.4);
+  pool.style.setProperty('--wl',wl.toFixed(1)+'%');
+  rd.textContent='MEMBERS '+String(n).padStart(3,'0')+' · SURFACE '+Math.round(wl)+'%';
+  rout.textContent = n>=12 ? 'sustainable.' : LINES[Math.min(LINES.length-1,n-1)];
+  blip(150+n*9);
+});
+
+/* ---------- projector CH + ---------- */
+var chs=$$('.tv .ch'), at=0;
+$('#chbtn').addEventListener('click',function(){
+  chs[at].classList.remove('on'); at=(at+1)%chs.length; chs[at].classList.add('on');
+  $('#chlbl').textContent='CH 0'+(at+1)+' · PAL';
+  blip(320);
+});
+
+/* ---------- documents (svg) + gallery + lightbox ---------- */
+function doc(title,inner,foot){
+  return '<svg viewBox="0 0 400 300" role="img" aria-label="'+title.toLowerCase()+'">'+
+    '<rect width="400" height="300" fill="#f2ecdd"/>'+
+    '<rect x="10" y="10" width="380" height="280" fill="none" stroke="#141c19" stroke-width="2"/>'+
+    '<text x="24" y="40" font-family="Archivo Black, sans-serif" font-size="15" fill="#141c19">'+title+'</text>'+
+    '<line x1="24" y1="50" x2="376" y2="50" stroke="#1c6b52" stroke-width="3"/>'+inner+
+    (foot?'<text x="24" y="278" font-family="IBM Plex Mono, monospace" font-size="9" fill="#6c7a73">'+foot+'</text>':'')+
+    '</svg>';
+}
+var H='font-family="Caveat, cursive" font-size="20" fill="#1c6b52"';
+var M='font-family="IBM Plex Mono, monospace" font-size="10" fill="#41504a"';
+var SHOTS=[
+ {c:'EXHIBIT A · THE ORIGINAL MENU',s:doc('THE ORIGINAL DRAWING',
+   '<polygon points="200,80 320,220 80,220" fill="none" stroke="#1c6b52" stroke-width="5"/>'+
+   '<circle cx="200" cy="112" r="9" fill="#f79a1f" stroke="#141c19" stroke-width="2"/>'+
+   '<text x="234" y="118" '+H+'>me</text>'+
+   '<text x="108" y="252" '+H+'>everyone, eventually</text>'+
+   '<text x="300" y="70" '+M+'>WEEK 1</text>','DRAWN ON THE BACK OF A LAMINATED MENU. NEVER REVISED.')},
+ {c:'EXHIBIT B · TEMPERATURE LOG',s:doc('TEMPERATURE LOG',
+   (function(){var o='',y;for(var k=0;k<14;k++){o+='<circle cx="'+(34+k*25)+'" cy="150" r="4" fill="#2c6c78"/>';}
+    o+='<line x1="34" y1="150" x2="359" y2="150" stroke="#2c6c78" stroke-width="3"/>';
+    o+='<text x="24" y="120" '+H+'>39.0 °c for fourteen weeks</text>';
+    o+='<text x="24" y="196" '+M+'>NO ACTION REQUIRED · NO ACTION TAKEN</text>';return o})(),'INSTRUMENT: A THERMOMETER SHE IS SITTING ON.')},
+ {c:'EXHIBIT C · MEMBERSHIP GROWTH',s:doc('MEMBERSHIP GROWTH',
+   '<line x1="40" y1="240" x2="360" y2="240" stroke="#141c19" stroke-width="2"/>'+
+   '<line x1="40" y1="70" x2="40" y2="240" stroke="#141c19" stroke-width="2"/>'+
+   '<polyline points="40,230 90,214 140,200 190,188 240,178 290,170 340,164" fill="none" stroke="#1c6b52" stroke-width="4"/>'+
+   '<polyline points="40,240 90,248 140,254 190,258 240,261" fill="none" stroke="#bf3b2e" stroke-width="4" stroke-dasharray="7 6"/>'+
+   '<text x="120" y="112" '+H+'>up and to the right</text>'+
+   '<text x="120" y="136" '+M+'>RED LINE: THE FLOOR OF THE POOL</text>','THE RED LINE IS NOT DISCUSSED AT THE SEMINAR.')},
+ {c:'EXHIBIT D · THE CITRUS',s:doc('DIVIDEND SPECIMEN',
+   '<circle cx="200" cy="160" r="58" fill="#f79a1f" stroke="#141c19" stroke-width="3"/>'+
+   '<circle cx="182" cy="142" r="16" fill="#ffc46b" opacity=".8"/>'+
+   '<text x="24" y="86" '+H+'>one (1) warm citrus</text>'+
+   '<text x="272" y="150" '+M+'>WARM</text><text x="272" y="166" '+M+'>ROUND</text><text x="272" y="182" '+M+'>YOURS</text>',
+   'NON-TRANSFERABLE. NON-APPRECIATING. VERY WARM.')},
+ {c:'EXHIBIT E · ROOM 3 FLOOR PLAN',s:doc('ROOM 3 · FLOOR PLAN',
+   '<rect x="60" y="80" width="280" height="150" fill="none" stroke="#141c19" stroke-width="3"/>'+
+   '<rect x="90" y="110" width="220" height="95" fill="#2c6c78" opacity=".35" stroke="#2c6c78" stroke-width="2"/>'+
+   '<text x="150" y="164" '+H+'>the water</text>'+
+   '<text x="64" y="252" '+M+'>EXIT: THEORETICAL · CHAIRS: 0 · FAN: OFF SINCE OPENING</text>','FIRE MARSHAL HAS NOT VISITED. FIRE IS NOT THE ISSUE.')},
+ {c:'EXHIBIT F · THE FOUNDER',s:'<img src="assets/ava.webp" alt="the founder, translucent, seated, entirely at peace with the arithmetic">'}
+];
+var grid=$('#grid');
+SHOTS.forEach(function(sh,i){
+  var b=document.createElement('button');
+  b.innerHTML=sh.s+'<div class="cap-t">'+sh.c+'</div>';
+  b.addEventListener('click',function(){ open(i) });
+  grid.appendChild(b);
+});
+var peek=$('#peek');
+SHOTS.concat(SHOTS.slice(0,3)).forEach(function(sh){
+  var d=document.createElement('div'); d.innerHTML=sh.s; peek.appendChild(d);
+});
+
+var lb=$('#lb'), lbBody=$('#lbBody'), lbCap=$('#lbCap'), cur=0;
+function open(i){ cur=i; render(); lb.classList.add('on'); blip(420) }
+function render(){ lbBody.innerHTML=SHOTS[cur].s; lbCap.textContent=SHOTS[cur].c }
+function close(){ lb.classList.remove('on') }
+$('#lbClose').addEventListener('click',close);
+$('#lbPrev').addEventListener('click',function(){ cur=(cur-1+SHOTS.length)%SHOTS.length; render() });
+$('#lbNext').addEventListener('click',function(){ cur=(cur+1)%SHOTS.length; render() });
+lb.addEventListener('click',function(e){ if(e.target===lb) close() });
+addEventListener('keydown',function(e){
+  if(!lb.classList.contains('on')) return;
+  if(e.key==='Escape') close();
+  if(e.key==='ArrowLeft'){ cur=(cur-1+SHOTS.length)%SHOTS.length; render() }
+  if(e.key==='ArrowRight'){ cur=(cur+1)%SHOTS.length; render() }
+});
+
+/* ---------- audio blips ---------- */
+var actx=null, muted=true;
+function blip(freq){
+  if(muted) return;
+  try{
+    if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)();
+    var o=actx.createOscillator(), g=actx.createGain();
+    o.type='square'; o.frequency.value=freq||220; g.gain.value=.04;
+    o.connect(g); g.connect(actx.destination); o.start();
+    g.gain.exponentialRampToValueAtTime(.0001, actx.currentTime+.09);
+    o.stop(actx.currentTime+.1);
+  }catch(e){}
+}
+/* sound toggle */
+var st=document.createElement('button');
+st.textContent='SOUND OFF';
+st.id='sndBtn';
+st.addEventListener('click',function(){ muted=!muted; st.textContent=muted?'SOUND OFF':'SOUND ON'; if(!muted) blip(260) });
+document.body.appendChild(st);
+
+})();
+</script>
